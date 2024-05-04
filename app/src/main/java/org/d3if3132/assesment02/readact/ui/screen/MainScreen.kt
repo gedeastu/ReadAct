@@ -10,7 +10,7 @@ import org.d3if3132.assesment02.readact.ui.components.BottomBar
 @Composable
 fun MainScreen(navHostController: NavHostController,content:@Composable (Modifier)->Unit) {
     Scaffold(bottomBar = {
-        BottomBar()
+        BottomBar(navController = navHostController)
     }){paddingValues ->
         content(Modifier.padding(paddingValues = paddingValues))
     }
