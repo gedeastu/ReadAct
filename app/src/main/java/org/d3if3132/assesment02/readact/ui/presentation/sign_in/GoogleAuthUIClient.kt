@@ -4,14 +4,16 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
+import com.google.android.gms.auth.api.identity.BeginSignInRequest.GoogleIdTokenRequestOptions
 import com.google.android.gms.auth.api.identity.SignInClient
-import com.google.firebase.Firebase
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.auth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.tasks.await
 import org.d3if3132.assesment02.readact.R
 import org.d3if3132.assesment02.readact.model.SignInResult
-import java.util.concurrent.CancellationException
+import org.d3if3132.assesment02.readact.model.UserData
  class GoogleAuthUIClient(
         private val context: Context,
         private val oneTapClient: SignInClient
@@ -39,7 +41,7 @@ import java.util.concurrent.CancellationException
                 val user = auth.signInWithCredential(googleCredentials).await().user
                 SignInResult(
                     data = user?.run {
-                        org.d3if3132.assesment02.readact.model.UserData(
+                    UserData(
                             userId = uid,
                             userName = displayName,
                             profilePictureUrl = photoUrl?.toString()
@@ -68,8 +70,8 @@ import java.util.concurrent.CancellationException
         }
 
         //Get user data when authentication is successful
-        fun getSignedInUser(): org.d3if3132.assesment02.readact.model.UserData? = auth.currentUser?.run {
-            org.d3if3132.assesment02.readact.model.UserData(
+        fun getSignedInUser(): UserData? = auth.currentUser?.run {
+            UserData(
                 userId = uid,
                 userName = displayName,
                 profilePictureUrl = photoUrl?.toString()
@@ -79,13 +81,11 @@ import java.util.concurrent.CancellationException
         private fun buildSignInRequest(): BeginSignInRequest {
             return BeginSignInRequest.Builder()
                 .setGoogleIdTokenRequestOptions(
-                    BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
-                        .setSupported(true)
-                        .setFilterByAuthorizedAccounts(false)
-                        .setServerClientId(context.getString(R.string.web_client_id))
-                        .build()
-                )
-                .setAutoSelectEnabled(true)
-                .build()
+                GoogleIdTokenRequestOptions.builder()
+                    .setSupported(true)
+                    .setFilterByAuthorizedAccounts(false)
+                    .setServerClientId(context.getString(R.string.web_client_id))
+                    .build()
+            ).setAutoSelectEnabled(true).build()
         }
     }
