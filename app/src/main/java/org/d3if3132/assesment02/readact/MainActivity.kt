@@ -16,18 +16,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.google.android.gms.auth.api.identity.Identity
 import kotlinx.coroutines.launch
+import org.d3if3132.assesment02.readact.navigation.AddEditNavGraph
 import org.d3if3132.assesment02.readact.navigation.AuthNavGraph
 import org.d3if3132.assesment02.readact.navigation.BottomBarNavGraph
 import org.d3if3132.assesment02.readact.navigation.Route
 import org.d3if3132.assesment02.readact.ui.presentation.sign_in.GoogleAuthUIClient
 import org.d3if3132.assesment02.readact.ui.presentation.sign_in.SignInViewModel
+import org.d3if3132.assesment02.readact.ui.screen.AddEditScreen
 import org.d3if3132.assesment02.readact.ui.screen.HomeScreen
+import org.d3if3132.assesment02.readact.ui.screen.KEY_ID_CATATAN
 import org.d3if3132.assesment02.readact.ui.screen.LoginScreen
 import org.d3if3132.assesment02.readact.ui.screen.MainScreen
 import org.d3if3132.assesment02.readact.ui.screen.ProfileScreen
@@ -47,9 +52,9 @@ class MainActivity : ComponentActivity() {
             ReadActTheme {
                 val navController = rememberNavController()
                 // A surface container using the 'background' color from the theme
-                MainScreen(navHostController = navController, content = {modifier ->
+                MainScreen(navHostController = navController,content = {modifier ->
                     Box(modifier = modifier.fillMaxSize()){
-                    NavHost(navController = navController, startDestination = Route.AUTHENTICATION, route = Route.ROOT){
+                    NavHost(navController = navController, startDestination = Route.MAIN, route = Route.ROOT){
 
                         navigation(startDestination = AuthNavGraph.Login.route, route = Route.AUTHENTICATION){
                             composable(route = AuthNavGraph.Login.route){
@@ -111,11 +116,11 @@ class MainActivity : ComponentActivity() {
 
                         navigation(startDestination = BottomBarNavGraph.Home.route, route = Route.MAIN){
                             composable(route = BottomBarNavGraph.Home.route){
-                                HomeScreen()
+                                HomeScreen(navController = navController)
                             }
 
                             composable(route = BottomBarNavGraph.Search.route){
-                                SearchScreen()
+                                SearchScreen(navController = navController)
                             }
 
                             composable(route = BottomBarNavGraph.Profile.route){
@@ -130,6 +135,16 @@ class MainActivity : ComponentActivity() {
                                         navController.navigate(AuthNavGraph.Login.route)
                                     }
                                 })
+                            }
+
+                            composable(route = AddEditNavGraph.AddScreen.route){
+                                AddEditScreen(navController = navController)
+                            }
+
+                            composable(route = AddEditNavGraph.EditScreen.route, arguments = listOf(
+                                navArgument(KEY_ID_CATATAN){ type = NavType.LongType }
+                            )){
+                                AddEditScreen(navController = navController)
                             }
                         }
                     }}
