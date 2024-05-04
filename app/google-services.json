@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "436193461021",
+    "project_id": "readact-5d171",
+    "storage_bucket": "readact-5d171.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:436193461021:android:e21a061f344f87d14f97f4",
+        "android_client_info": {
+          "package_name": "org.d3if3132.assesment02.readact"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmOF8xPLQGHMtZNiWNH0t5Ovrm4ajHGCQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
