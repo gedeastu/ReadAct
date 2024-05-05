@@ -51,7 +51,7 @@ fun RowScope.NavigationBarItem(
 ) {
     NavigationBarItem(
         label = {
-            Text(text = screen.title, color = if (hierarchy) Color.Green else Color.Gray)
+            Text(text = screen.title, color = if (hierarchy) Color.DarkGray else Color.Gray)
         },
         icon = {
             Icon(
@@ -59,7 +59,7 @@ fun RowScope.NavigationBarItem(
             )
         },
         colors = NavigationBarItemDefaults.colors(
-            selectedIconColor = Color.Green,
+            selectedIconColor = Color.DarkGray,
             unselectedIconColor = Color.Gray
         ),
         selected = hierarchy,

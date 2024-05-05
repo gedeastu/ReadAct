@@ -14,14 +14,19 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import org.d3if3132.assesment02.readact.R
+import org.d3if3132.assesment02.readact.database.BookDb
 import org.d3if3132.assesment02.readact.navigation.AddEditNavGraph
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavHostController) {
+    val context = LocalContext.current
+    val db = BookDb.getInstance(context = context)
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -41,7 +46,7 @@ fun HomeScreen(navController: NavHostController) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(id = R.string.add))
             }
         }
-    ){paddingValues ->  
+    ){paddingValues ->
         Column(modifier = Modifier.padding(paddingValues = paddingValues)){
 
         }
