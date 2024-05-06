@@ -15,6 +15,9 @@ interface BookDao {
     @Update
     suspend fun update(book: Book)
 
+    @Insert
+    suspend fun insertImage(book: Book)
+
     @Query("SELECT * FROM book ORDER BY title ASC")
     fun getBook(): Flow<List<Book>>
 

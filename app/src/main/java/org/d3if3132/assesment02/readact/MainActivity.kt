@@ -27,12 +27,14 @@ import kotlinx.coroutines.launch
 import org.d3if3132.assesment02.readact.navigation.AddEditNavGraph
 import org.d3if3132.assesment02.readact.navigation.AuthNavGraph
 import org.d3if3132.assesment02.readact.navigation.BottomBarNavGraph
+import org.d3if3132.assesment02.readact.navigation.DetailNavGraph
 import org.d3if3132.assesment02.readact.navigation.Route
 import org.d3if3132.assesment02.readact.ui.presentation.sign_in.GoogleAuthUIClient
 import org.d3if3132.assesment02.readact.ui.presentation.sign_in.SignInViewModel
 import org.d3if3132.assesment02.readact.ui.screen.AddEditScreen
+import org.d3if3132.assesment02.readact.ui.screen.DetailScreen
 import org.d3if3132.assesment02.readact.ui.screen.HomeScreen
-import org.d3if3132.assesment02.readact.ui.screen.KEY_ID_CATATAN
+import org.d3if3132.assesment02.readact.ui.screen.KEY_ID_BOOK
 import org.d3if3132.assesment02.readact.ui.screen.LoginScreen
 import org.d3if3132.assesment02.readact.ui.screen.MainScreen
 import org.d3if3132.assesment02.readact.ui.screen.ProfileScreen
@@ -141,10 +143,21 @@ class MainActivity : ComponentActivity() {
                                 AddEditScreen(navController = navController)
                             }
 
-                            composable(route = AddEditNavGraph.EditScreen.route, arguments = listOf(
-                                navArgument(KEY_ID_CATATAN){ type = NavType.LongType }
-                            )){
-                                AddEditScreen(navController = navController)
+                            composable(
+                                route = AddEditNavGraph.EditScreen.route,
+                                arguments = listOf(
+                                    navArgument(KEY_ID_BOOK){ type = NavType.LongType }
+                                )
+                            ){navBackStackEntry ->
+                                val dataId = navBackStackEntry.arguments?.getLong(KEY_ID_BOOK)
+                                AddEditScreen(navController = navController, id = dataId)
+                            }
+
+                            composable(route = DetailNavGraph.DetailScreen.route, arguments = listOf(
+                                navArgument(KEY_ID_BOOK){ type = NavType.LongType }
+                            )){navBackStackEntry ->
+                                val dataId = navBackStackEntry.arguments?.getLong(KEY_ID_BOOK)
+                                DetailScreen(id = dataId)
                             }
                         }
                     }}

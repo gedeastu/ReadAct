@@ -2,6 +2,7 @@ package org.d3if3132.assesment02.readact.ui.components
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -51,7 +52,7 @@ fun RowScope.NavigationBarItem(
 ) {
     NavigationBarItem(
         label = {
-            Text(text = screen.title, color = if (hierarchy) Color.DarkGray else Color.Gray)
+            Text(text = screen.title, color = if (hierarchy) MaterialTheme.colorScheme.tertiary else Color.Gray)
         },
         icon = {
             Icon(
@@ -59,7 +60,7 @@ fun RowScope.NavigationBarItem(
             )
         },
         colors = NavigationBarItemDefaults.colors(
-            selectedIconColor = Color.DarkGray,
+            selectedIconColor = MaterialTheme.colorScheme.tertiary,
             unselectedIconColor = Color.Gray
         ),
         selected = hierarchy,

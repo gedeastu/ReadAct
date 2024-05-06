@@ -5,7 +5,7 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.graphics.vector.ImageVector
-import org.d3if3132.assesment02.readact.ui.screen.KEY_ID_CATATAN
+import org.d3if3132.assesment02.readact.ui.screen.KEY_ID_BOOK
 
 sealed class AuthNavGraph(val route : String){
     data object Splash : AuthNavGraph(Route.SPLASH)
@@ -14,13 +14,13 @@ sealed class AuthNavGraph(val route : String){
 
 sealed class AddEditNavGraph(val route: String){
     data object AddScreen : AddEditNavGraph(Route.ADDEDIT_SCREEN)
-    data object EditScreen : AddEditNavGraph("${Route.ADDEDIT_SCREEN}/{$KEY_ID_CATATAN}"){
+    data object EditScreen : AddEditNavGraph("${Route.ADDEDIT_SCREEN}/{$KEY_ID_BOOK}"){
         fun withId(id:Long) = "${Route.ADDEDIT_SCREEN}/$id"
     }
 }
 
 sealed class DetailNavGraph(val route: String){
-    data object DetailScreen : DetailNavGraph("${Route.DETAIL_SCREEN}/{$KEY_ID_CATATAN}"){
+    data object DetailScreen : DetailNavGraph("${Route.DETAIL_SCREEN}/{$KEY_ID_BOOK}"){
         fun withId(id: Long) = "${Route.DETAIL_SCREEN}/$id"
     }
 }

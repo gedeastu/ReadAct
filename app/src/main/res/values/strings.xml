@@ -3,4 +3,11 @@
     <string name="web_client_id">436193461021-0akkqcn5t1169eq05h7ns8q5s7oimo2m.apps.googleusercontent.com</string>
     <string name="home">Home</string>
     <string name="add">Add</string>
+    <string name="back">Back</string>
+    <string name="add_book">
+        New Book
+    </string>
+    <string name="edit_book">
+        Edit Book
+    </string>
 </resources>
