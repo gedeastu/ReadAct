@@ -8,6 +8,7 @@ import org.d3if3132.assesment02.readact.model.Book
 
 @Database(entities = [Book::class], version = 1, exportSchema = false)
 abstract class BookDb : RoomDatabase(){
+    abstract val dao:BookDao
     companion object {
         @Volatile
         private var INSTANCE: BookDb? = null
