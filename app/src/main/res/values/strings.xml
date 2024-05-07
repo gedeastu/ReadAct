@@ -10,4 +10,7 @@
     <string name="edit_book">
         Edit Book
     </string>
+    <string name="invalid">
+        Title,Description, And Image is Empty
+    </string>
 </resources>

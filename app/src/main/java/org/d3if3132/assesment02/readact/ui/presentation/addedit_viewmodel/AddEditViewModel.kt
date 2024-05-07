@@ -7,8 +7,13 @@ import kotlinx.coroutines.launch
 import org.d3if3132.assesment02.readact.database.BookDao
 import org.d3if3132.assesment02.readact.model.Book
 
+//private val _selectedImageUri = MutableStateFlow<Uri?>(null)
+//val selectedImageUri : StateFlow<Uri?> = _selectedImageUri
+//
+//fun selectImage(uri:)
+
 class AddEditViewModel(private val dao: BookDao): ViewModel(){
-    fun insert(title:String, desc:String, date:Int,cover:String){
+    fun insert(title:String, desc:String, date:Int, cover: String){
         val book = Book(title = title, desc = desc, date = date, cover = cover)
         viewModelScope.launch(Dispatchers.IO){
             dao.insert(book = book)
