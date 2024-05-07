@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 MainScreen(navHostController = navController,content = {modifier ->
                     Box(modifier = modifier.fillMaxSize()){
-                    NavHost(navController = navController, startDestination = Route.AUTHENTICATION, route = Route.ROOT){
+                    NavHost(navController = navController, startDestination = Route.MAIN, route = Route.ROOT){
 
                         navigation(startDestination = AuthNavGraph.Login.route, route = Route.AUTHENTICATION){
                             composable(route = AuthNavGraph.Login.route){

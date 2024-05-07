@@ -9,6 +9,7 @@ import org.d3if3132.assesment02.readact.model.Book
 
 @Dao
 interface BookDao {
+
     @Insert
     suspend fun insert(book: Book)
 
