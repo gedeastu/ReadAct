@@ -9,4 +9,7 @@ data class Book(
     val id:Long = 0L,
     val title:String,
     val desc:String,
+    val genre:String,
+    val dateRelease:String,
+    val writer: String
 )

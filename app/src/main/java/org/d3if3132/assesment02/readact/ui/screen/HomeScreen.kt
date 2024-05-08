@@ -53,14 +53,15 @@ import org.d3if3132.assesment02.readact.util.ViewModelFactory
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavHostController) {
+
     val context = LocalContext.current
     val db = BookDb.getInstance(context = context)
     val factory = ViewModelFactory(dao = db.dao)
     val viewModel : MainViewModel = viewModel(factory = factory)
     val controller : AddEditViewModel = viewModel(factory = factory)
     val datas by viewModel.datas.collectAsState(initial = emptyList())
-
     val orderBooks = datas.lastOrNull()
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -119,19 +120,19 @@ fun ListItem(book: Book, onClick:()->Unit, onDelete:()->Unit, onDetail:()->Unit)
         .border(1.5.dp, MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(10.dp))
         .padding(16.dp), horizontalArrangement = Arrangement.Absolute.SpaceBetween, verticalAlignment = Alignment.CenterVertically){
         Column {
-            Text(text = book.title,maxLines = 1, overflow = TextOverflow.Ellipsis, fontWeight = FontWeight.Bold)
-            Text(text = book.desc, maxLines = 3, overflow = TextOverflow.Ellipsis)
+            Text(text = book.title,maxLines = 1, overflow = TextOverflow.Ellipsis, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
+            Text(text = book.desc, maxLines = 3, overflow = TextOverflow.Ellipsis, color = MaterialTheme.colorScheme.primary)
         }
         Column {
             IconButton(onClick = {
                 onDelete()
             }) {
-                Icon(imageVector = Icons.Default.Delete, contentDescription = "delete")
+                Icon(imageVector = Icons.Default.Delete, contentDescription = "delete", tint = MaterialTheme.colorScheme.primary)
             }
             IconButton(onClick = {
                 onDetail()
             }) {
-                Icon(imageVector = Icons.AutoMirrored.Filled.List, contentDescription = "detail")
+                Icon(imageVector = Icons.AutoMirrored.Filled.List, contentDescription = "detail", tint = MaterialTheme.colorScheme.primary)
             }
         }
     }

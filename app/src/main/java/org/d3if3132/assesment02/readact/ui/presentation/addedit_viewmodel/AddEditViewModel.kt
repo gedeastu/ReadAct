@@ -11,11 +11,17 @@ class AddEditViewModel(private val dao: BookDao): ViewModel(){
     fun insert(
         title:String,
         desc:String,
+        genre:String,
+        dateRelease:String,
+        writer: String
     ){
         //val coverInsert = _selectedImageUri.value?.toString() ?: ""
         val book = Book(
             title = title,
             desc = desc,
+            genre = genre,
+            dateRelease = dateRelease,
+            writer = writer
         )
         viewModelScope.launch(Dispatchers.IO){
             dao.insert(book = book)
@@ -26,12 +32,18 @@ class AddEditViewModel(private val dao: BookDao): ViewModel(){
         id:Long,
         title:String,
         desc:String,
+        genre:String,
+        dateRelease:String,
+        writer: String
     ){
         //val coverUpdate = _selectedImageUri.value?.toString() ?: ""
         val book = Book(
             id = id,
             title = title,
             desc = desc,
+            genre = genre,
+            dateRelease = dateRelease,
+            writer = writer
         )
         viewModelScope.launch(Dispatchers.IO){
             dao.update(book = book)
