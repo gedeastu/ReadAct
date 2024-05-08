@@ -1,5 +1,6 @@
 package org.d3if3132.assesment02.readact
 
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -7,6 +8,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -48,6 +50,7 @@ class MainActivity : ComponentActivity() {
             oneTapClient = Identity.getSignInClient(applicationContext)
         )
     }
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -56,7 +59,7 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 MainScreen(navHostController = navController,content = {modifier ->
                     Box(modifier = modifier.fillMaxSize()){
-                    NavHost(navController = navController, startDestination = Route.MAIN, route = Route.ROOT){
+                    NavHost(navController = navController, startDestination = Route.AUTHENTICATION, route = Route.ROOT){
 
                         navigation(startDestination = AuthNavGraph.Login.route, route = Route.AUTHENTICATION){
                             composable(route = AuthNavGraph.Login.route){
@@ -100,19 +103,18 @@ class MainActivity : ComponentActivity() {
                                         viewModel.resetState()
                                     }
                                 })
-
-                                LoginScreen(
-                                    state = state,
-                                    onSignInClick = {
-                                        lifecycleScope.launch {
-                                            val signInIntentSender = googleAuthUIClient.signIn()
-                                            launcher.launch(
-                                                IntentSenderRequest.Builder(
-                                                    signInIntentSender ?: return@launch
-                                                ).build()
-                                            )
-                                        }
-                                    })
+                                    LoginScreen(
+                                        state = state,
+                                        onSignInClick = {
+                                            lifecycleScope.launch {
+                                                val signInIntentSender = googleAuthUIClient.signIn()
+                                                launcher.launch(
+                                                    IntentSenderRequest.Builder(
+                                                        signInIntentSender ?: return@launch
+                                                    ).build()
+                                                )
+                                            }
+                                        })
                             }
                         }
 

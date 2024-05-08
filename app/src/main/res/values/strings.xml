@@ -13,4 +13,7 @@
     <string name="invalid">
         Title,Description, And Image is Empty
     </string>
+    <string name="copyright">
+        © 2024 Gede Astu Nugraha
+    </string>
 </resources>

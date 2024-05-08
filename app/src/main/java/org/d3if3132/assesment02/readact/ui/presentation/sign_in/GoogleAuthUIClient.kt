@@ -41,11 +41,11 @@ import org.d3if3132.assesment02.readact.model.UserData
                 val user = auth.signInWithCredential(googleCredentials).await().user
                 SignInResult(
                     data = user?.run {
-                    UserData(
-                            userId = uid,
-                            userName = displayName,
-                            profilePictureUrl = photoUrl?.toString()
-                        )
+                        UserData(
+                                userId = uid,
+                                userName = displayName,
+                                profilePictureUrl = photoUrl?.toString()
+                            )
                     },
                     errorMessage = null
                 )

@@ -1,31 +1,38 @@
 package org.d3if3132.assesment02.readact.ui.presentation.addedit_viewmodel
 
-import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.d3if3132.assesment02.readact.database.BookDao
 import org.d3if3132.assesment02.readact.model.Book
 
 class AddEditViewModel(private val dao: BookDao): ViewModel(){
-    private val _selectedImageUri = MutableStateFlow<Uri?>(null)
-    val selectedImageUri : StateFlow<Uri?> = _selectedImageUri
-
-    fun selectImage(uri: Uri){
-        _selectedImageUri.value = uri
-    }
-    fun insert(title:String, desc:String, date:Int, cover: String){
-        val book = Book(title = title, desc = desc, date = date, cover = cover)
+    fun insert(
+        title:String,
+        desc:String,
+    ){
+        //val coverInsert = _selectedImageUri.value?.toString() ?: ""
+        val book = Book(
+            title = title,
+            desc = desc,
+        )
         viewModelScope.launch(Dispatchers.IO){
             dao.insert(book = book)
         }
     }
 
-    fun update(id:Long,title:String,desc:String,date:Int, cover: String){
-        val book = Book(id = id, title = title, desc = desc, date = date, cover = cover)
+    fun update(
+        id:Long,
+        title:String,
+        desc:String,
+    ){
+        //val coverUpdate = _selectedImageUri.value?.toString() ?: ""
+        val book = Book(
+            id = id,
+            title = title,
+            desc = desc,
+        )
         viewModelScope.launch(Dispatchers.IO){
             dao.update(book = book)
         }

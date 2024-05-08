@@ -9,7 +9,6 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -31,7 +30,7 @@ fun BottomBar(navController: NavHostController){
         it.route == currentDestination?.route
     }
     if (bottomBarDestination){
-        NavigationBar {
+        NavigationBar(containerColor = MaterialTheme.colorScheme.primary){
             screens.forEach{screen ->
                 NavigationBarItem(
                     screen = screen,
@@ -52,7 +51,7 @@ fun RowScope.NavigationBarItem(
 ) {
     NavigationBarItem(
         label = {
-            Text(text = screen.title, color = if (hierarchy) MaterialTheme.colorScheme.tertiary else Color.Gray)
+            Text(text = screen.title, color = if (hierarchy) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.surface)
         },
         icon = {
             Icon(
@@ -60,8 +59,9 @@ fun RowScope.NavigationBarItem(
             )
         },
         colors = NavigationBarItemDefaults.colors(
-            selectedIconColor = MaterialTheme.colorScheme.tertiary,
-            unselectedIconColor = Color.Gray
+            indicatorColor = MaterialTheme.colorScheme.surface,
+            selectedIconColor = MaterialTheme.colorScheme.primary,
+            unselectedIconColor = MaterialTheme.colorScheme.surface
         ),
         selected = hierarchy,
 

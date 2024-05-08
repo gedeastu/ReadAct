@@ -1,24 +1,28 @@
 package org.d3if3132.assesment02.readact.ui.screen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -29,20 +33,20 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import coil.compose.rememberAsyncImagePainter
 import org.d3if3132.assesment02.readact.R
 import org.d3if3132.assesment02.readact.database.BookDb
 import org.d3if3132.assesment02.readact.model.Book
 import org.d3if3132.assesment02.readact.navigation.AddEditNavGraph
 import org.d3if3132.assesment02.readact.navigation.DetailNavGraph
+import org.d3if3132.assesment02.readact.ui.presentation.addedit_viewmodel.AddEditViewModel
 import org.d3if3132.assesment02.readact.ui.presentation.main_viewmodel.MainViewModel
 import org.d3if3132.assesment02.readact.util.ViewModelFactory
 
@@ -53,7 +57,10 @@ fun HomeScreen(navController: NavHostController) {
     val db = BookDb.getInstance(context = context)
     val factory = ViewModelFactory(dao = db.dao)
     val viewModel : MainViewModel = viewModel(factory = factory)
-    val datas by viewModel.datas.collectAsState()
+    val controller : AddEditViewModel = viewModel(factory = factory)
+    val datas by viewModel.datas.collectAsState(initial = emptyList())
+
+    val orderBooks = datas.lastOrNull()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -61,7 +68,7 @@ fun HomeScreen(navController: NavHostController) {
                     Text(text = stringResource(id = R.string.home))
                 },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.tertiary,
+                    containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.surface
                 )
             )
@@ -69,17 +76,19 @@ fun HomeScreen(navController: NavHostController) {
         floatingActionButton = {
             FloatingActionButton(onClick = {
                 navController.navigate(AddEditNavGraph.AddScreen.route)
-            }) {
+            }, containerColor = MaterialTheme.colorScheme.primary) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(id = R.string.add))
             }
         }
     ){paddingValues ->
-        if (datas.isEmpty()){
+        if (orderBooks == null){
             Column(modifier = Modifier
                 .padding(paddingValues = paddingValues)
                 .fillMaxSize()
                 .padding(16.dp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally){
-                Text(text = "Data Kosong")
+                Icon(painter = painterResource(id = R.drawable.book), contentDescription = null, modifier = Modifier.size(100.dp), tint = MaterialTheme.colorScheme.primary)
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(text = "Empty Book List", color = MaterialTheme.colorScheme.primary)
             }   
         }else{
             LazyColumn(modifier = Modifier
@@ -89,6 +98,10 @@ fun HomeScreen(navController: NavHostController) {
                 content = {
                     items(datas){
                        ListItem(book = it, onClick = {
+                            navController.navigate(AddEditNavGraph.EditScreen.withId(it.id))
+                       }, onDelete = {
+                            controller.delete(id = it.id)
+                       }, onDetail = {
                             navController.navigate(DetailNavGraph.DetailScreen.withId(it.id))
                        })
                     }
@@ -98,16 +111,28 @@ fun HomeScreen(navController: NavHostController) {
 }
 
 @Composable
-fun ListItem(book: Book, onClick:()->Unit){
-    Row(modifier = Modifier.padding(10.dp).fillMaxWidth()
+fun ListItem(book: Book, onClick:()->Unit, onDelete:()->Unit, onDetail:()->Unit){
+    Row(modifier = Modifier
+        .padding(10.dp)
+        .fillMaxWidth()
         .clickable { onClick() }
         .border(1.5.dp, MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(10.dp))
-        .padding(16.dp), horizontalArrangement = Arrangement.Absolute.SpaceAround, verticalAlignment = Alignment.CenterVertically){
-        Image(painter = rememberAsyncImagePainter(model = book.cover), contentDescription = book.cover, contentScale = ContentScale.Crop, modifier = Modifier.size(80.dp))
+        .padding(16.dp), horizontalArrangement = Arrangement.Absolute.SpaceBetween, verticalAlignment = Alignment.CenterVertically){
         Column {
             Text(text = book.title,maxLines = 1, overflow = TextOverflow.Ellipsis, fontWeight = FontWeight.Bold)
             Text(text = book.desc, maxLines = 3, overflow = TextOverflow.Ellipsis)
-            Text(text = book.date.toString())
+        }
+        Column {
+            IconButton(onClick = {
+                onDelete()
+            }) {
+                Icon(imageVector = Icons.Default.Delete, contentDescription = "delete")
+            }
+            IconButton(onClick = {
+                onDetail()
+            }) {
+                Icon(imageVector = Icons.AutoMirrored.Filled.List, contentDescription = "detail")
+            }
         }
     }
 }
