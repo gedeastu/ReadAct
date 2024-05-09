@@ -19,6 +19,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -39,6 +41,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import org.d3if3132.assesment02.readact.R
@@ -49,6 +52,7 @@ import org.d3if3132.assesment02.readact.navigation.DetailNavGraph
 import org.d3if3132.assesment02.readact.ui.presentation.addedit_viewmodel.AddEditViewModel
 import org.d3if3132.assesment02.readact.ui.presentation.main_viewmodel.MainViewModel
 import org.d3if3132.assesment02.readact.util.ViewModelFactory
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -66,7 +70,10 @@ fun HomeScreen(navController: NavHostController) {
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = stringResource(id = R.string.home))
+                    Row(horizontalArrangement = Arrangement.spacedBy(10.dp)){
+                        Icon(imageVector = Icons.Default.Home, contentDescription = "home")
+                        Text(text = stringResource(id = R.string.home))
+                    }
                 },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
@@ -118,16 +125,27 @@ fun ListItem(book: Book, onClick:()->Unit, onDelete:()->Unit, onDetail:()->Unit)
         .fillMaxWidth()
         .clickable { onClick() }
         .border(1.5.dp, MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(10.dp))
-        .padding(16.dp), horizontalArrangement = Arrangement.Absolute.SpaceBetween, verticalAlignment = Alignment.CenterVertically){
-        Column {
-            Text(text = book.title,maxLines = 1, overflow = TextOverflow.Ellipsis, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
-            Text(text = book.desc, maxLines = 3, overflow = TextOverflow.Ellipsis, color = MaterialTheme.colorScheme.primary)
+        .padding(8.dp), horizontalArrangement = Arrangement.Absolute.SpaceBetween, verticalAlignment = Alignment.CenterVertically){
+        Column(Modifier.padding(start = 10.dp)){
+            Text(text = book.title.uppercase(Locale.ROOT),maxLines = 1, overflow = TextOverflow.Ellipsis, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary, fontSize = 20.sp)
+            Row(horizontalArrangement = Arrangement.spacedBy(14.dp)){
+                Column {
+                    Text(text = book.genre, fontSize = 15.sp)
+                    Text(text = book.dateRelease, fontSize = 15.sp)
+                    Text(text = book.writer.lowercase(Locale.ROOT), fontSize = 15.sp)
+                }
+            }
         }
         Column {
             IconButton(onClick = {
                 onDelete()
             }) {
                 Icon(imageVector = Icons.Default.Delete, contentDescription = "delete", tint = MaterialTheme.colorScheme.primary)
+            }
+            IconButton(onClick = {
+                onClick()
+            }) {
+                Icon(imageVector = Icons.Default.Edit, contentDescription = "delete", tint = MaterialTheme.colorScheme.primary)
             }
             IconButton(onClick = {
                 onDetail()

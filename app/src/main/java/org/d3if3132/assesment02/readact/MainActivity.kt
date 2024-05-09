@@ -159,7 +159,7 @@ class MainActivity : ComponentActivity() {
                                 navArgument(KEY_ID_BOOK){ type = NavType.LongType }
                             )){navBackStackEntry ->
                                 val dataId = navBackStackEntry.arguments?.getLong(KEY_ID_BOOK)
-                                DetailScreen(id = dataId)
+                                DetailScreen(navController = navController,id = dataId)
                             }
                         }
                     }}

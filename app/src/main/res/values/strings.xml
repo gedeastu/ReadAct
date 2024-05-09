@@ -11,7 +11,7 @@
         Edit Book
     </string>
     <string name="invalid">
-        Title,Description, And Image is Empty
+        Title,Description, And Writer is Empty
     </string>
     <string name="action">
         Action

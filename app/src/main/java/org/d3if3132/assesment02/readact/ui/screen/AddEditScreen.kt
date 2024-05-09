@@ -3,15 +3,19 @@ package org.d3if3132.assesment02.readact.ui.screen
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -20,7 +24,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.RadioButton
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -87,7 +91,14 @@ fun AddEditScreen(navController: NavHostController,id:Long? = null) {
         mutableStateOf(dateReleaseOptions[0])
     }
 
-    var isExpanded by mutableStateOf(false)
+    var isExpanded by remember {
+        mutableStateOf(false)
+    }
+
+    var isExpandedDateRelease by remember {
+        mutableStateOf(false)
+    }
+
     LaunchedEffect(key1 = Unit, block = {
         if (id == null) return@LaunchedEffect
         val data = viewModel.getBook(id) ?: return@LaunchedEffect
@@ -144,9 +155,28 @@ fun AddEditScreen(navController: NavHostController,id:Long? = null) {
             .padding(paddingValues = paddingValues)
             .padding(16.dp), verticalArrangement = Arrangement.spacedBy(20.dp), horizontalAlignment = Alignment.CenterHorizontally){
 
-            OutlinedTextField(value = title, onValueChange = { title=it }, modifier = Modifier.fillMaxWidth(0.9f))
-            OutlinedTextField(value = writer, onValueChange = { writer = it }, modifier = Modifier.fillMaxWidth(0.9f))
-            OutlinedTextField(value = desc, onValueChange = { desc = it }, modifier = Modifier.fillMaxWidth(0.9f))
+            OutlinedTextField(value = title, onValueChange = { title=it }, placeholder = { Text(text = "Title Book",color = MaterialTheme.colorScheme.primary) },modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .border(2.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(5.dp)), colors = OutlinedTextFieldDefaults.colors(
+                disabledTextColor = MaterialTheme.colorScheme.primary,
+                disabledBorderColor = MaterialTheme.colorScheme.primary,
+                disabledPlaceholderColor = MaterialTheme.colorScheme.primary
+            ))
+            OutlinedTextField(value = writer, onValueChange = { writer = it }, placeholder = { Text(text = "Writer Book",color = MaterialTheme.colorScheme.primary) },modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .border(2.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(5.dp)), colors = OutlinedTextFieldDefaults.colors(
+                disabledTextColor = MaterialTheme.colorScheme.primary,
+                disabledBorderColor = MaterialTheme.colorScheme.primary,
+                disabledPlaceholderColor = MaterialTheme.colorScheme.primary
+            ))
+            OutlinedTextField(value = desc, onValueChange = { desc = it }, placeholder = { Text(text = "Description", color = MaterialTheme.colorScheme.primary) },modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .height(300.dp)
+                .border(2.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(5.dp)),colors = OutlinedTextFieldDefaults.colors(
+                disabledTextColor = MaterialTheme.colorScheme.primary,
+                disabledBorderColor = MaterialTheme.colorScheme.primary,
+                disabledPlaceholderColor = MaterialTheme.colorScheme.primary
+            ))
 
             Column(
                 modifier = Modifier
@@ -155,12 +185,24 @@ fun AddEditScreen(navController: NavHostController,id:Long? = null) {
             ){
                 ExposedDropdownMenuBox(expanded = isExpanded, onExpandedChange = {isExpanded = !isExpanded}) {
                     OutlinedTextField(
-                        modifier = Modifier.menuAnchor().fillMaxWidth(0.9f),
+                        modifier = Modifier
+                            .menuAnchor()
+                            .fillMaxWidth(0.9f)
+                            .border(
+                                2.dp,
+                                MaterialTheme.colorScheme.primary,
+                                RoundedCornerShape(5.dp)
+                            ),
                         value = genre,
                         textStyle = TextStyle(color = MaterialTheme.colorScheme.primary),
                         onValueChange = {
                             genre = it
                         },
+                        colors = OutlinedTextFieldDefaults.colors(
+                            disabledTextColor = MaterialTheme.colorScheme.primary,
+                            disabledBorderColor = MaterialTheme.colorScheme.primary,
+                            disabledPlaceholderColor = MaterialTheme.colorScheme.primary
+                        ),
                         readOnly = true,
                         trailingIcon = {
                             ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
@@ -184,17 +226,81 @@ fun AddEditScreen(navController: NavHostController,id:Long? = null) {
                     }
                 }
             }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ){
+                ExposedDropdownMenuBox(expanded = isExpandedDateRelease, onExpandedChange = {isExpandedDateRelease = !isExpandedDateRelease}) {
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .menuAnchor()
+                            .fillMaxWidth(0.9f)
+                            .border(
+                                2.dp,
+                                MaterialTheme.colorScheme.primary,
+                                RoundedCornerShape(5.dp)
+                            ),
+                        value = dateRelease,
+                        textStyle = TextStyle(color = MaterialTheme.colorScheme.primary),
+                        onValueChange = {
+                            dateRelease = it
+                        },
+                        colors = OutlinedTextFieldDefaults.colors(
+                            disabledTextColor = MaterialTheme.colorScheme.primary,
+                            disabledBorderColor = MaterialTheme.colorScheme.primary,
+                            disabledPlaceholderColor = MaterialTheme.colorScheme.primary
+                        ),
+                        readOnly = true,
+                        trailingIcon = {
+                            ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpandedDateRelease)
+                        }
+                    )
+                    ExposedDropdownMenu(expanded = isExpandedDateRelease, onDismissRequest = {
+                        isExpandedDateRelease = false
+                    }) {
+                        dateReleaseOptions.forEach{ value ->
+                            DropdownMenuItem(
+                                text = {
+                                    Text(text = value, color = MaterialTheme.colorScheme.primary)
+                                },
+                                onClick = {
+                                    dateRelease = value
+                                    isExpandedDateRelease = false
+                                },
+                                contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                            )
+                        }
+                    }
+                }
+            }
+
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)){
+                Button(onClick = {
+                    title = ""
+                    desc = ""
+                    writer = ""
+                    genre = genreOptions[0]
+                    dateRelease = dateReleaseOptions[0]
+                }) {
+                    Text(text = "Reset")
+                }
+                Button(onClick = {
+                    if (title == "" || desc == "" || writer == ""){
+                        Toast.makeText(context, R.string.invalid, Toast.LENGTH_LONG).show()
+                        return@Button
+                    }
+                    if (id == null){
+                        viewModel.insert(title = title, desc = desc, genre = genre, writer = writer, dateRelease = dateRelease)
+                    }else{
+                        viewModel.update(id = id, title = title, desc = desc, genre = genre, writer = writer, dateRelease = dateRelease)
+                    }
+                    navController.popBackStack()
+                }) {
+                    Text(text = "Save")
+                }
+            }
         }
-    }
-}
-@Composable
-fun RadioButtons(label: String, isSelected:Boolean, modifier: Modifier ){
-    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically){
-        RadioButton(selected = isSelected, onClick = null)
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.padding(start = 2.dp)
-        )
     }
 }
