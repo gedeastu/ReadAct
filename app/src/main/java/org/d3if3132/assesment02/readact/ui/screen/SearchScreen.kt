@@ -42,6 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -54,6 +55,7 @@ import org.d3if3132.assesment02.readact.ui.presentation.addedit_viewmodel.AddEdi
 import org.d3if3132.assesment02.readact.ui.presentation.main_viewmodel.MainViewModel
 import org.d3if3132.assesment02.readact.ui.theme.ReadActTheme
 import org.d3if3132.assesment02.readact.util.ViewModelFactory
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -136,9 +138,15 @@ fun ListItemSearch(book: Book, onClick:()->Unit, onDelete:()->Unit, onDetail:()-
         .clickable { onClick() }
         .border(1.5.dp, MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(10.dp))
         .padding(16.dp), horizontalArrangement = Arrangement.Absolute.SpaceBetween, verticalAlignment = Alignment.CenterVertically){
-        Column {
-            Text(text = book.title,maxLines = 1, overflow = TextOverflow.Ellipsis, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
-            Text(text = book.desc, maxLines = 3, overflow = TextOverflow.Ellipsis, color = MaterialTheme.colorScheme.primary)
+        Column(Modifier.padding(start = 10.dp)){
+            Text(text = book.title.uppercase(Locale.ROOT),maxLines = 1, overflow = TextOverflow.Ellipsis, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary, fontSize = 20.sp)
+            Row(horizontalArrangement = Arrangement.spacedBy(14.dp)){
+                Column {
+                    Text(text = book.genre, fontSize = 15.sp)
+                    Text(text = book.dateRelease, fontSize = 15.sp)
+                    Text(text = book.writer.lowercase(Locale.ROOT), fontSize = 15.sp)
+                }
+            }
         }
         Column {
             IconButton(onClick = {
