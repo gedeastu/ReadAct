@@ -46,4 +46,10 @@
     <string name="copyright">
         © 2024 Gede Astu Nugraha
     </string>
+    <string name="night">
+        Night
+    </string>
+    <string name="day">
+        Day
+    </string>
 </resources>

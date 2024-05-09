@@ -14,6 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
@@ -49,12 +52,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.d3if3132.assesment02.readact.R
 import org.d3if3132.assesment02.readact.database.BookDb
 import org.d3if3132.assesment02.readact.navigation.AddEditNavGraph
 import org.d3if3132.assesment02.readact.navigation.DetailNavGraph
 import org.d3if3132.assesment02.readact.ui.presentation.addedit_viewmodel.AddEditViewModel
 import org.d3if3132.assesment02.readact.ui.presentation.main_viewmodel.MainViewModel
+import org.d3if3132.assesment02.readact.util.SettingsDataStore
 import org.d3if3132.assesment02.readact.util.ViewModelFactory
 import java.util.Locale
 
@@ -69,6 +76,9 @@ fun HomeScreen(navController: NavHostController) {
     val controller : AddEditViewModel = viewModel(factory = factory)
     val datas by viewModel.datas.collectAsState(initial = emptyList())
     val orderBooks = datas.lastOrNull()
+    val dataStore = SettingsDataStore(LocalContext.current)
+    val showList by dataStore.layoutFlow.collectAsState(initial = true)
+
     var showDialog by remember {
         mutableStateOf(false)
     }
@@ -85,7 +95,19 @@ fun HomeScreen(navController: NavHostController) {
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.surface
-                )
+                ),
+                actions = {
+                    IconButton(onClick = {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            dataStore.saveLayout(!showList)
+                        }
+                    }) {
+                        Icon(painter = painterResource( id =
+                            if (showList) R.drawable.baseline_grid_view_24
+                            else R.drawable.baseline_view_list_24
+                        ), contentDescription = if (showList) "Grid" else "List", tint = MaterialTheme.colorScheme.surface)
+                    }
+                }
             )
         },
         floatingActionButton = {
@@ -106,13 +128,72 @@ fun HomeScreen(navController: NavHostController) {
                 Text(text = "Empty Book List", color = MaterialTheme.colorScheme.primary)
             }   
         }else{
-            LazyColumn(modifier = Modifier
-                .padding(paddingValues = paddingValues)
-                .fillMaxSize(),
-                contentPadding = PaddingValues(bottom = 84.dp),
-                content = {
-                    items(datas){book ->
-                        Row(modifier = Modifier
+            if (showList){
+                LazyColumn(modifier = Modifier
+                    .padding(paddingValues = paddingValues)
+                    .fillMaxSize(),
+                    contentPadding = PaddingValues(bottom = 84.dp),
+                    content = {
+                        items(datas){book ->
+                            Row(modifier = Modifier
+                                .padding(10.dp)
+                                .fillMaxWidth()
+                                .clickable {
+                                    navController.navigate(
+                                        AddEditNavGraph.EditScreen.withId(
+                                            book.id
+                                        )
+                                    )
+                                }
+                                .border(
+                                    1.5.dp,
+                                    MaterialTheme.colorScheme.primary,
+                                    shape = RoundedCornerShape(10.dp)
+                                )
+                                .padding(8.dp), horizontalArrangement = Arrangement.Absolute.SpaceBetween, verticalAlignment = Alignment.CenterVertically){
+                                Column(Modifier.padding(start = 10.dp)){
+                                    Text(text = book.title.uppercase(Locale.ROOT),maxLines = 1, overflow = TextOverflow.Ellipsis, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary, fontSize = 20.sp)
+                                    Row(horizontalArrangement = Arrangement.spacedBy(14.dp)){
+                                        Column {
+                                            Text(text = book.genre, fontSize = 15.sp)
+                                            Text(text = book.dateRelease, fontSize = 15.sp)
+                                            Text(text = book.writer.lowercase(Locale.ROOT), fontSize = 15.sp)
+                                        }
+                                    }
+                                }
+                                Column {
+                                    IconButton(onClick = {
+                                        showDialog = true
+                                    }) {
+                                        Icon(imageVector = Icons.Default.Delete, contentDescription = "delete", tint = MaterialTheme.colorScheme.primary)
+                                    }
+                                    IconButton(onClick = {
+                                        navController.navigate(AddEditNavGraph.EditScreen.withId(book.id))
+                                    }) {
+                                        Icon(imageVector = Icons.Default.Edit, contentDescription = "delete", tint = MaterialTheme.colorScheme.primary)
+                                    }
+                                    IconButton(onClick = {
+                                        navController.navigate(DetailNavGraph.DetailScreen.withId(book.id))
+                                    }) {
+                                        Icon(imageVector = Icons.AutoMirrored.Filled.List, contentDescription = "detail", tint = MaterialTheme.colorScheme.primary)
+                                    }
+                                }
+                                if (showDialog){
+                                    DisplayAlertDialog(onConfirmation = {
+                                        showDialog = false
+                                        controller.delete(book.id)
+                                        navController.popBackStack()
+                                    }, onDismissRequest = { showDialog=false })
+                                }
+                            }
+                        }
+                    })
+            }else{
+                LazyVerticalStaggeredGrid(modifier = Modifier
+                    .padding(paddingValues = paddingValues)
+                    .fillMaxSize(), columns = StaggeredGridCells.Fixed(2),verticalItemSpacing = 8.dp, horizontalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(8.dp,8.dp,8.dp, 84.dp)) {
+                    items(datas){ book ->
+                        Column(modifier = Modifier
                             .padding(10.dp)
                             .fillMaxWidth()
                             .clickable {
@@ -127,7 +208,7 @@ fun HomeScreen(navController: NavHostController) {
                                 MaterialTheme.colorScheme.primary,
                                 shape = RoundedCornerShape(10.dp)
                             )
-                            .padding(8.dp), horizontalArrangement = Arrangement.Absolute.SpaceBetween, verticalAlignment = Alignment.CenterVertically){
+                            .padding(8.dp), horizontalAlignment = Alignment.Start, verticalArrangement = Arrangement.Center){
                             Column(Modifier.padding(start = 10.dp)){
                                 Text(text = book.title.uppercase(Locale.ROOT),maxLines = 1, overflow = TextOverflow.Ellipsis, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary, fontSize = 20.sp)
                                 Row(horizontalArrangement = Arrangement.spacedBy(14.dp)){
@@ -138,7 +219,7 @@ fun HomeScreen(navController: NavHostController) {
                                     }
                                 }
                             }
-                            Column {
+                            Row{
                                 IconButton(onClick = {
                                     showDialog = true
                                 }) {
@@ -160,11 +241,12 @@ fun HomeScreen(navController: NavHostController) {
                                     showDialog = false
                                     controller.delete(book.id)
                                     navController.popBackStack()
-                                                                    }, onDismissRequest = { showDialog=false })
+                                }, onDismissRequest = { showDialog=false })
                             }
                         }
                     }
-            })
+                }
+            }
         }
     }
 }

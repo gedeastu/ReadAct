@@ -13,7 +13,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -42,6 +44,7 @@ import org.d3if3132.assesment02.readact.ui.screen.MainScreen
 import org.d3if3132.assesment02.readact.ui.screen.ProfileScreen
 import org.d3if3132.assesment02.readact.ui.screen.SearchScreen
 import org.d3if3132.assesment02.readact.ui.theme.ReadActTheme
+import org.d3if3132.assesment02.readact.util.SettingsDataStore
 
 class MainActivity : ComponentActivity() {
     private val googleAuthUIClient by lazy {
@@ -54,12 +57,15 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            ReadActTheme {
+            val isDarkMode by SettingsDataStore(LocalContext.current).themeFlow.collectAsState(
+                initial = false
+            )
+            ReadActTheme(darkTheme = isDarkMode){
                 val navController = rememberNavController()
                 // A surface container using the 'background' color from the theme
                 MainScreen(navHostController = navController,content = {modifier ->
                     Box(modifier = modifier.fillMaxSize()){
-                    NavHost(navController = navController, startDestination = Route.MAIN, route = Route.ROOT){
+                    NavHost(navController = navController, startDestination = Route.AUTHENTICATION, route = Route.ROOT){
 
                         navigation(startDestination = AuthNavGraph.Login.route, route = Route.AUTHENTICATION){
                             composable(route = AuthNavGraph.Login.route){
